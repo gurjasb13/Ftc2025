@@ -12,9 +12,9 @@ public class DriveEncoderTest extends OpMode {
 
     @Override
     public void init() {
-        par1 = hardwareMap.get(DcMotor.class, "rf");
-        par2 = hardwareMap.get(DcMotor.class, "rb");
-        perp = hardwareMap.get(DcMotor.class, "lf");
+        par1 = hardwareMap.get(DcMotor.class, "rf");//port 0
+        par2 = hardwareMap.get(DcMotor.class, "rb");//port 2
+        perp = hardwareMap.get(DcMotor.class, "lf");//port 1
 
         par1.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         par2.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
