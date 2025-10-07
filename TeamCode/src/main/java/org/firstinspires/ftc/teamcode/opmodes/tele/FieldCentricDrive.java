@@ -1,10 +1,12 @@
 package org.firstinspires.ftc.teamcode.opmodes.tele;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
+import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.teamcode.commands.drivebase.FieldCentricCommand;
 import org.firstinspires.ftc.teamcode.subsystems.DrivebaseSubsystem;
 
+@TeleOp
 public class FieldCentricDrive extends OpMode {
     private DrivebaseSubsystem drivebaseSubsystem;
     private FieldCentricCommand fieldCentricCommand;
