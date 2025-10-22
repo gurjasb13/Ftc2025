@@ -31,13 +31,22 @@ public class ShooterSubsystem extends SubsystemBase {
         shooterMotor1.setDirection(DcMotor.Direction.FORWARD);
         shooterMotor2.setDirection(DcMotor.Direction.FORWARD);
 
-        shooterMotor1.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        shooterMotor1.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        shooterMotor2.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        shooterMotor1.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        shooterMotor2.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
         controller = new PDController(kP, kD);
     }
 
     public void setTargetRPM(double targetRPM) {
+
         this.targetRPM = targetRPM;
+    }
+
+    public void setPower(double power) {
+        shooterMotor1.setPower(power);
+        shooterMotor2.setPower(power);
     }
 
     public void stop() {
@@ -45,7 +54,7 @@ public class ShooterSubsystem extends SubsystemBase {
         shooterMotor2.setPower(0);
     }
 
-    @Override
+    /*@Override
     public void periodic() {
         controller.setP(kP);
         controller.setD(kD);
@@ -64,5 +73,5 @@ public class ShooterSubsystem extends SubsystemBase {
         packet.put("Current RPM", currentRPM);
         packet.put("Power", power);
         dashboard.sendTelemetryPacket(packet);
-    }
+    }*/
 }

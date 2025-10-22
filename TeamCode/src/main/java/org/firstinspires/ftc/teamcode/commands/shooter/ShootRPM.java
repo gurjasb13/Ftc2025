@@ -8,21 +8,18 @@ import org.firstinspires.ftc.teamcode.subsystems.ShooterSubsystem;
 
 public class ShootRPM extends CommandBase {
     private final ShooterSubsystem shooterSubsystem;
-    private final double targetRPM;
+    private final Gamepad gamepad;
 
-    public ShootRPM(ShooterSubsystem shooterSubsystem, double targetRPM) {
+    public ShootRPM(ShooterSubsystem shooterSubsystem, Gamepad gamepad) {
         this.shooterSubsystem = shooterSubsystem;
-        this.targetRPM=targetRPM;
+        this.gamepad = gamepad;
         addRequirements(shooterSubsystem);
     }
 
     @Override
-    public void initialize() {
-        shooterSubsystem.setTargetRPM(targetRPM);
-    }
-
     public void execute(){
-        shooterSubsystem.setTargetRPM(targetRPM);
+        double power = gamepad.a ? 1 : 0;
+        shooterSubsystem.setPower(power);
     }
 
     public void end(){
