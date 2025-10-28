@@ -7,6 +7,7 @@ import com.arcrobotics.ftclib.command.SubsystemBase;
 import com.arcrobotics.ftclib.controller.PDController;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 @Config
@@ -29,7 +30,7 @@ public class ShooterSubsystem extends SubsystemBase {
         shooterMotor2 = hardwareMap.get(DcMotorEx.class, "shooterMotor2");
 
         shooterMotor1.setDirection(DcMotor.Direction.FORWARD);
-        shooterMotor2.setDirection(DcMotor.Direction.FORWARD);
+        shooterMotor2.setDirection(DcMotor.Direction.REVERSE);
 
         shooterMotor1.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         shooterMotor2.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);

@@ -144,6 +144,7 @@ public class ConceptTelemetry extends LinearOpMode  {
             telemetry.addLine("right joystick | ")
                     .addData("x", gamepad1.right_stick_x)
                     .addData("y", gamepad1.right_stick_y);
+            
 
             /*
              * Transmit the telemetry to the driver station, subject to throttling.

@@ -13,8 +13,6 @@ import org.firstinspires.ftc.teamcode.subsystems.ShooterSubsystem;
 
 @TeleOp
 public class PurplePrototypeTest extends OpMode {
-    private DrivebaseSubsystem drivebaseSubsystem;
-    private RobotCentricCommand robotCentricCommand;
 
     private ShooterSubsystem shooterSubsystem;
     private ShootRPM shootRPM;
@@ -24,9 +22,6 @@ public class PurplePrototypeTest extends OpMode {
 
     @Override
     public void init() {
-        drivebaseSubsystem = new DrivebaseSubsystem(hardwareMap);
-        robotCentricCommand = new RobotCentricCommand(drivebaseSubsystem, gamepad1);
-
         shooterSubsystem = new ShooterSubsystem(hardwareMap);
         shootRPM = new ShootRPM(shooterSubsystem, gamepad1);
 
@@ -36,7 +31,6 @@ public class PurplePrototypeTest extends OpMode {
 
     @Override
     public void loop() {
-        robotCentricCommand.execute();
         shootRPM.execute();
         intakeCommand.execute();
     }

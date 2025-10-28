@@ -1,22 +1,24 @@
 package org.firstinspires.ftc.teamcode.subsystems;
 
+import com.acmerobotics.roadrunner.Action;
+import com.acmerobotics.roadrunner.Pose2d;
 import com.arcrobotics.ftclib.command.SubsystemBase;
+import com.arcrobotics.ftclib.drivebase.HDrive;
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
+import org.firstinspires.ftc.teamcode.roadrunner.MecanumDrive;
+
 public class DrivebaseSubsystem extends SubsystemBase {
     private DcMotor rfmotor, lfmotor, rbmotor, lbmotor;
-    private BNO055IMU imu;
 
     public DrivebaseSubsystem(HardwareMap hardwareMap){
 
-        rfmotor = hardwareMap.get(DcMotor.class, "rf");
-        lfmotor = hardwareMap.get(DcMotor.class, "lf");
-        rbmotor = hardwareMap.get(DcMotor.class, "rb");
-        lbmotor = hardwareMap.get(DcMotor.class, "lb");
-
-        imu = hardwareMap.get(BNO055IMU.class, "imu");
+        rfmotor = hardwareMap.get(DcMotor.class, "rf");//Port0
+        lfmotor = hardwareMap.get(DcMotor.class, "lf");//Port1
+        rbmotor = hardwareMap.get(DcMotor.class, "rb");//Port2
+        lbmotor = hardwareMap.get(DcMotor.class, "lb");//Port3
 
         //set motor directions
         rfmotor.setDirection(DcMotor.Direction.REVERSE);
@@ -45,13 +47,6 @@ public class DrivebaseSubsystem extends SubsystemBase {
         rbmotor.setPower(backRightPower);
     }
 
-    public void resetIMU(){
-        BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
-        parameters.angleUnit = BNO055IMU.AngleUnit.RADIANS;
-        imu.initialize(parameters);
-    }
 
-    public double getHeading(){
-        return imu.getAngularOrientation().firstAngle;
-    }
 }
+
