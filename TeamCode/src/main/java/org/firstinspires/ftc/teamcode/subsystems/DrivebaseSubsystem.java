@@ -2,10 +2,13 @@ package org.firstinspires.ftc.teamcode.subsystems;
 
 import com.acmerobotics.roadrunner.Action;
 import com.acmerobotics.roadrunner.Pose2d;
+import com.acmerobotics.roadrunner.ftc.OverflowEncoder;
+import com.acmerobotics.roadrunner.ftc.RawEncoder;
 import com.arcrobotics.ftclib.command.SubsystemBase;
 import com.arcrobotics.ftclib.drivebase.HDrive;
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.teamcode.roadrunner.MecanumDrive;
@@ -15,10 +18,11 @@ public class DrivebaseSubsystem extends SubsystemBase {
 
     public DrivebaseSubsystem(HardwareMap hardwareMap){
 
-        rfmotor = hardwareMap.get(DcMotor.class, "rf");//Port0
-        lfmotor = hardwareMap.get(DcMotor.class, "lf");//Port1
-        rbmotor = hardwareMap.get(DcMotor.class, "rb");//Port2
+        rfmotor = hardwareMap.get(DcMotor.class, "rf");//Port0----encoder par0
+        lfmotor = hardwareMap.get(DcMotor.class, "lf");//Port1----encoder perp
+        rbmotor = hardwareMap.get(DcMotor.class, "rb");//Port2-----encoder par1
         lbmotor = hardwareMap.get(DcMotor.class, "lb");//Port3
+
 
         //set motor directions
         rfmotor.setDirection(DcMotor.Direction.REVERSE);
@@ -47,6 +51,21 @@ public class DrivebaseSubsystem extends SubsystemBase {
         rbmotor.setPower(backRightPower);
     }
 
+    public double getStrafePosition() {
+        // Assuming you have DcMotors or Encoders for the odom pods
+        // backOdom measures lateral movement
+        // Optional: subtract rotation-induced error using left/right encoders
+
+        double lateral = rbmotor.getCurrentPosition(); // ticks
+        // Convert ticks → inches (or cm) if needed
+        double ticksPerInch = 2318.4;
+        return lateral / ticksPerInch;
+    }
+
+
+    public void stop() {
+        drive(0, 0, 0);
+    }
 
 }
 
