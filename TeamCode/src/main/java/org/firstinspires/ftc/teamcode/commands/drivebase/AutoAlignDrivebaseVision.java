@@ -22,7 +22,7 @@ public class AutoAlignDrivebaseVision extends CommandBase {
         this.vision = vision;
         this.gamepad=gamepad;
 
-        strafePID = new PIDController(0.05, 0, 0.001);
+        strafePID = new PIDController(0.001, 0, 0.0001);
         //distancePID = new PIDController(0.04, 0, 0.001);
 
         addRequirements(drivebaseSubsystem);

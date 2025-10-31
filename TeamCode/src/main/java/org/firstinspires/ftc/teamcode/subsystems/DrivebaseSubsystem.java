@@ -19,8 +19,8 @@ public class DrivebaseSubsystem extends SubsystemBase {
     public DrivebaseSubsystem(HardwareMap hardwareMap){
 
         rfmotor = hardwareMap.get(DcMotor.class, "rf");//Port0----encoder par0
-        lfmotor = hardwareMap.get(DcMotor.class, "lf");//Port1----encoder perp
-        rbmotor = hardwareMap.get(DcMotor.class, "rb");//Port2-----encoder par1
+        lfmotor = hardwareMap.get(DcMotor.class, "lf");//Port1----encoder par 1
+        rbmotor = hardwareMap.get(DcMotor.class, "rb");//Port2-----perp
         lbmotor = hardwareMap.get(DcMotor.class, "lb");//Port3
 
 
@@ -52,12 +52,8 @@ public class DrivebaseSubsystem extends SubsystemBase {
     }
 
     public double getStrafePosition() {
-        // Assuming you have DcMotors or Encoders for the odom pods
-        // backOdom measures lateral movement
-        // Optional: subtract rotation-induced error using left/right encoders
-
         double lateral = rbmotor.getCurrentPosition(); // ticks
-        // Convert ticks → inches (or cm) if needed
+
         double ticksPerInch = 2318.4;
         return lateral / ticksPerInch;
     }
