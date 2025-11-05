@@ -4,53 +4,63 @@ import com.acmerobotics.dashboard.config.Config;
 import com.arcrobotics.ftclib.controller.PIDController;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-
-import org.firstinspires.ftc.teamcode.subsystems.DrivebaseSubsystem;
+import com.qualcomm.robotcore.hardware.DcMotor;
 
 @Config
-@TeleOp
+@TeleOp(name = "Drivebase PID Tuning")
 public class DrivebasePIDtuning extends OpMode {
-    DrivebaseSubsystem drivebaseSubsystem;
+    private DcMotor rfmotor, lfmotor, rbmotor, lbmotor;
 
-    private double strafekP= 0;
-    private double strafekI= 0;
-    private double strafekD= 0;
+    public static double strafekP = 0.01;
+    public static double strafekI = 0.0;
+    public static double strafekD = 0.0;
 
-    private double targetPosition = 24; // inches
+    public static double targetPosition = 1000; // encoder ticks (adjust as needed)
 
     private PIDController strafePID = new PIDController(strafekP, strafekI, strafekD);
 
     @Override
     public void init() {
-        drivebaseSubsystem = new DrivebaseSubsystem(hardwareMap);
+        rfmotor = hardwareMap.get(DcMotor.class, "rf");
+        lfmotor = hardwareMap.get(DcMotor.class, "lf");
+        rbmotor = hardwareMap.get(DcMotor.class, "rb");
+        lbmotor = hardwareMap.get(DcMotor.class, "lb");
+
+        rfmotor.setDirection(DcMotor.Direction.REVERSE);
+        rbmotor.setDirection(DcMotor.Direction.REVERSE);
+
+        rfmotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        lfmotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        rbmotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        lbmotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
     }
 
     @Override
     public void loop() {
+        strafePID.setPID(strafekP, strafekI, strafekD);
+
         if (gamepad1.y) {
-            // Get current strafe position from encoders
-            double currentPosition = drivebaseSubsystem.getStrafePosition(); // implement method in DriveSubsystem
-
-            // Calculate PID output
+            double currentPosition = rbmotor.getCurrentPosition();
             double strafePower = strafePID.calculate(currentPosition, targetPosition);
-
-            // Clamp output
             strafePower = Math.max(-0.5, Math.min(0.5, strafePower));
 
-            // Drive robot: forward=0, strafe=PID output, turn=0
-            drivebaseSubsystem.drive(0, strafePower, 0);
+            // Strafing motor power directions
+            lfmotor.setPower(-strafePower);
+            rfmotor.setPower(strafePower);
+            lbmotor.setPower(strafePower);
+            rbmotor.setPower(-strafePower);
         } else {
-            // Stop strafing when button not pressed
-            drivebaseSubsystem.drive(0, 0, 0);
+            lfmotor.setPower(0);
+            rfmotor.setPower(0);
+            lbmotor.setPower(0);
+            rbmotor.setPower(0);
         }
 
-        // --- Telemetry for tuning ---
-        telemetry.addData("Current Pos", drivebaseSubsystem.getStrafePosition());
+        telemetry.addData("Current Pos", rbmotor.getCurrentPosition());
         telemetry.addData("Target Pos", targetPosition);
-        telemetry.addData("P", strafePID.getP());
-        telemetry.addData("I", strafePID.getI());
-        telemetry.addData("D", strafePID.getD());
+        telemetry.addData("P", strafekP);
+        telemetry.addData("I", strafekI);
+        telemetry.addData("D", strafekD);
         telemetry.update();
     }
 }
-
