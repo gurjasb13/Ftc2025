@@ -28,5 +28,7 @@ public class AutoAlignDrivebase extends OpMode {
 
         telemetry.addData("Has Target", visionSubsystem.hasTarget());
         telemetry.addData("Tx", visionSubsystem.getTx());
+        telemetry.addData("Ty", visionSubsystem.getTy());
+        telemetry.addData("Distance", visionSubsystem.getDistance());
     }
 }

@@ -6,7 +6,7 @@ import com.qualcomm.robotcore.hardware.Gamepad;
 import org.firstinspires.ftc.teamcode.subsystems.ShooterSubsystem;
 
 public class shootPower extends CommandBase {
-    private final ShooterSubsystem shooterSubsystem;
+    ShooterSubsystem shooterSubsystem;
     private final Gamepad gamepad;
 
     public shootPower(ShooterSubsystem shooterSubsystem, Gamepad gamepad) {
@@ -17,15 +17,11 @@ public class shootPower extends CommandBase {
 
     @Override
     public void execute(){
-        double power = gamepad.a ? 1 : 0;
+        double power = gamepad.y ? 1 : 0;
         shooterSubsystem.setPower(power);
     }
 
     public void end(){
         shooterSubsystem.stop();
-    }
-
-    public boolean isFinished(){
-        return true;
     }
 }

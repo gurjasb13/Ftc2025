@@ -11,8 +11,8 @@ public class VisionSubsystem extends SubsystemBase {
     private final Limelight3A limelight;
     private LLResult latestResult;
 
-    private final double cameraHeight = 22.0;//change
-    private final double targetHeight = 14.0;//change
+    private final double cameraHeight = 16.51;//change
+    private final double targetHeight = 73.66;//change
     private final double cameraAngle = Math.toRadians(70);//change
 
     public VisionSubsystem(HardwareMap hardwareMap) {

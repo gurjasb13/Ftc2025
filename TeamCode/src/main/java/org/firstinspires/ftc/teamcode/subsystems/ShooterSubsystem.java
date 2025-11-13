@@ -22,7 +22,7 @@ public class ShooterSubsystem extends SubsystemBase {
     public ShooterSubsystem(HardwareMap hardwareMap) {
         shooterMotor1 = hardwareMap.get(DcMotorEx.class, "shooterMotor1");
 
-        shooterMotor1.setDirection(DcMotor.Direction.FORWARD);
+        shooterMotor1.setDirection(DcMotor.Direction.REVERSE);
 
         shooterMotor1.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         shooterMotor1.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
