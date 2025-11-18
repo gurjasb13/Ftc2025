@@ -9,12 +9,18 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
+import org.firstinspires.ftc.teamcode.commands.intake.IntakeCommand;
+import org.firstinspires.ftc.teamcode.subsystems.IntakeSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.ShooterSubsystem;
 
 @TeleOp(name = "Shooter PD tuning")
 @Config
 public class ShooterPDtuning extends OpMode {
     ShooterSubsystem shooterSubsystem;
+    IntakeSubsystem intakeSubsystem;
+
+    IntakeCommand intakeCommand;
+
     private PDController controller;
 
     public static double kP = 0.0005;
@@ -26,6 +32,8 @@ public class ShooterPDtuning extends OpMode {
     @Override
     public void init(){
         shooterSubsystem= new ShooterSubsystem(hardwareMap);
+        intakeSubsystem= new IntakeSubsystem(hardwareMap);
+        intakeCommand= new IntakeCommand(intakeSubsystem, gamepad1);
         controller = new PDController(kP, kD);
     }
 
@@ -33,6 +41,8 @@ public class ShooterPDtuning extends OpMode {
     public void loop(){
         controller.setP(kP);
         controller.setD(kD);
+
+        intakeCommand.execute();
 
         double power = controller.calculate(shooterSubsystem.getCurrentRPM(), targetRPM);
         power = Math.max(0, Math.min(power, 1));

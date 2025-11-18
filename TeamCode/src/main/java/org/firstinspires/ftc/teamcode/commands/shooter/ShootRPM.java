@@ -13,8 +13,8 @@ public class ShootRPM extends CommandBase {
     private final Gamepad gamepad;
     private final PDController controller;
 
-    public static double kP = 0.0005;
-    public static double kD = 0.0001;
+    public static double kP = 0.1;
+    public static double kD = 0.01;
 
     private double targetRPM = 0;
 

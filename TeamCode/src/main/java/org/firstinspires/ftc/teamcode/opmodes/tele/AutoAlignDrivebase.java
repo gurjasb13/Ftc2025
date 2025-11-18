@@ -1,12 +1,14 @@
 package org.firstinspires.ftc.teamcode.opmodes.tele;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
+import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.Gamepad;
 
 import org.firstinspires.ftc.teamcode.commands.drivebase.AutoAlignDrivebaseVision;
 import org.firstinspires.ftc.teamcode.subsystems.DrivebaseSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.VisionSubsystem;
 
+@TeleOp
 public class AutoAlignDrivebase extends OpMode {
     DrivebaseSubsystem drivebaseSubsystem;
     VisionSubsystem visionSubsystem;
@@ -18,7 +20,7 @@ public class AutoAlignDrivebase extends OpMode {
         drivebaseSubsystem = new DrivebaseSubsystem(hardwareMap);
         visionSubsystem = new VisionSubsystem(hardwareMap);
 
-        autoAlignDrivebaseVision = new AutoAlignDrivebaseVision(drivebaseSubsystem, visionSubsystem, gamepad1);
+        autoAlignDrivebaseVision = new AutoAlignDrivebaseVision(drivebaseSubsystem, visionSubsystem, gamepad1, telemetry);
 
     }
 

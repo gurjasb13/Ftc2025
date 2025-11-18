@@ -23,9 +23,7 @@ public class VisionDataTest extends OpMode {
     public void loop() {
         LLResult latestResult = limelight.getLatestResult();
 
-        if (!latestResult.isValid()) {
-            telemetry.addLine("No result object yet.");
-        } else if (latestResult.isValid()) {
+        if (latestResult.isValid()) {
             telemetry.addData("Has target", true);
             telemetry.addData("Target Type", latestResult.getFiducialResults());
             telemetry.addData("X Offset", latestResult.getTx());

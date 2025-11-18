@@ -1,10 +1,15 @@
 package org.firstinspires.ftc.teamcode.opmodes.tuning;
 
 import com.acmerobotics.dashboard.config.Config;
+import com.acmerobotics.roadrunner.ftc.Encoder;
+import com.acmerobotics.roadrunner.ftc.OverflowEncoder;
+import com.acmerobotics.roadrunner.ftc.RawEncoder;
 import com.arcrobotics.ftclib.controller.PIDController;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorEx;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
 @Config
 @TeleOp(name = "Drivebase PID Tuning")
@@ -26,6 +31,9 @@ public class DrivebasePIDtuning extends OpMode {
         rbmotor = hardwareMap.get(DcMotor.class, "rb");
         lbmotor = hardwareMap.get(DcMotor.class, "lb");
 
+        rbmotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        rbmotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+
         rfmotor.setDirection(DcMotor.Direction.REVERSE);
         rbmotor.setDirection(DcMotor.Direction.REVERSE);
 
@@ -45,10 +53,10 @@ public class DrivebasePIDtuning extends OpMode {
             strafePower = Math.max(-0.5, Math.min(0.5, strafePower));
 
             // Strafing motor power directions
-            lfmotor.setPower(-strafePower);
-            rfmotor.setPower(strafePower);
-            lbmotor.setPower(strafePower);
-            rbmotor.setPower(-strafePower);
+            lfmotor.setPower(strafePower);
+            rfmotor.setPower(-strafePower);
+            lbmotor.setPower(-strafePower);
+            rbmotor.setPower(strafePower);
         } else {
             lfmotor.setPower(0);
             rfmotor.setPower(0);

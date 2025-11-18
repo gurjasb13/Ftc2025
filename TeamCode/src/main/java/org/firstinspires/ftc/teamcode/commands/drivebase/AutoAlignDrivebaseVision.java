@@ -4,6 +4,7 @@ import com.arcrobotics.ftclib.command.CommandBase;
 import com.arcrobotics.ftclib.controller.PIDController;
 import com.qualcomm.robotcore.hardware.Gamepad;
 
+import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.subsystems.DrivebaseSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.VisionSubsystem;
 
@@ -11,18 +12,20 @@ public class AutoAlignDrivebaseVision extends CommandBase {
     private final DrivebaseSubsystem drivebaseSubsystem;
     private final VisionSubsystem vision;
     private final Gamepad gamepad;
+    private final Telemetry telemetry;
 
     private final PIDController strafePID;
     //private final PIDController distancePID;
 
     private final double targetDistance = 40.0;
 
-    public AutoAlignDrivebaseVision(DrivebaseSubsystem drivebaseSubsystem, VisionSubsystem vision, Gamepad gamepad) {
+    public AutoAlignDrivebaseVision(DrivebaseSubsystem drivebaseSubsystem, VisionSubsystem vision, Gamepad gamepad, Telemetry telemetry) {
         this.drivebaseSubsystem = drivebaseSubsystem;
         this.vision = vision;
         this.gamepad=gamepad;
+        this.telemetry=telemetry;
 
-        strafePID = new PIDController(0.001, 0, 0.0001);
+        strafePID = new PIDController(0.0009, 0, 0.00001);
         //distancePID = new PIDController(0.04, 0, 0.001);
 
         addRequirements(drivebaseSubsystem);
@@ -30,6 +33,12 @@ public class AutoAlignDrivebaseVision extends CommandBase {
 
     @Override
     public void execute() {
+        if(vision.hasTarget()){
+            telemetry.addData("Has Target", vision.hasTarget());
+            telemetry.addData("Tx", vision.getTx());
+            telemetry.addData("Ty", vision.getTy());
+            telemetry.addData("Distance", vision.getDistance());
+        }
         if (gamepad.x && vision.hasTarget()) {
 
             double tx = vision.getTx(); // side error
@@ -43,6 +52,9 @@ public class AutoAlignDrivebaseVision extends CommandBase {
             //forwardPower = Math.max(-0.3, Math.min(0.3, forwardPower));
 
             drivebaseSubsystem.drive(0, strafePower, 0);
+        }
+        else if (gamepad.x && !vision.hasTarget()) {
+            telemetry.addData("Has Target", vision.hasTarget());
         }
     }
 
