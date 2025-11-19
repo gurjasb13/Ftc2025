@@ -18,10 +18,10 @@ public class DrivebaseSubsystem extends SubsystemBase {
 
     public DrivebaseSubsystem(HardwareMap hardwareMap){
 
-        rfmotor = hardwareMap.get(DcMotor.class, "rf");//Port0----encoder par0
-        lfmotor = hardwareMap.get(DcMotor.class, "lf");//Port1----encoder par 1
-        rbmotor = hardwareMap.get(DcMotor.class, "rb");//Port2-----perp
-        lbmotor = hardwareMap.get(DcMotor.class, "lb");//Port3
+        rfmotor = hardwareMap.get(DcMotor.class, "rf");//Port3----right encoder
+        lfmotor = hardwareMap.get(DcMotor.class, "lf");//Port2
+        rbmotor = hardwareMap.get(DcMotor.class, "rb");//Port1-----perp
+        lbmotor = hardwareMap.get(DcMotor.class, "lb");//Port0-----left encoder
 
 
         //set motor directions
@@ -37,9 +37,19 @@ public class DrivebaseSubsystem extends SubsystemBase {
         lbmotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
     }
 
+    private double cubicCurve(double input) {
+        return 0.6 * Math.pow(input, 3) + 0.4 * input;
+    }
+
     public void drive(double x, double y, double rx) {
 
+        // Apply cubic scaling to soften low inputs
+        x = cubicCurve(x);
+        y = cubicCurve(y);
+        rx = cubicCurve(rx);
+
         double denominator = Math.max(Math.abs(y) + Math.abs(x) + Math.abs(rx), 1);
+
         double frontLeftPower = (y + x + rx) / denominator;
         double backLeftPower = (y - x + rx) / denominator;
         double frontRightPower = (y - x - rx) / denominator;

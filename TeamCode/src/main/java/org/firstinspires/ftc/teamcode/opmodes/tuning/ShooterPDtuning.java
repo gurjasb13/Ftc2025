@@ -9,52 +9,60 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
+import org.firstinspires.ftc.teamcode.commands.drivebase.RobotCentricCommand;
 import org.firstinspires.ftc.teamcode.commands.intake.IntakeCommand;
+import org.firstinspires.ftc.teamcode.commands.shooter.ShootRPM;
+import org.firstinspires.ftc.teamcode.subsystems.DrivebaseSubsystem;
+import org.firstinspires.ftc.teamcode.subsystems.Gate;
 import org.firstinspires.ftc.teamcode.subsystems.IntakeSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.ShooterSubsystem;
+import org.firstinspires.ftc.teamcode.subsystems.feeder;
 
 @TeleOp(name = "Shooter PD tuning")
 @Config
 public class ShooterPDtuning extends OpMode {
     ShooterSubsystem shooterSubsystem;
     IntakeSubsystem intakeSubsystem;
+    DrivebaseSubsystem drivebaseSubsystem;
+    Gate gate;
+    feeder feeder;
 
     IntakeCommand intakeCommand;
-
-    private PDController controller;
-
-    public static double kP = 0.0005;
-    public static double kD = 0.0001;
-
-    public static double targetRPM = 0;
+    RobotCentricCommand robotCentricCommand;
+    ShootRPM shootRPM;
 
 
     @Override
     public void init(){
         shooterSubsystem= new ShooterSubsystem(hardwareMap);
         intakeSubsystem= new IntakeSubsystem(hardwareMap);
-        intakeCommand= new IntakeCommand(intakeSubsystem, gamepad1);
-        controller = new PDController(kP, kD);
+        drivebaseSubsystem = new DrivebaseSubsystem(hardwareMap);
+        gate= new Gate(hardwareMap);
+        feeder= new feeder(hardwareMap);
+
+        robotCentricCommand = new RobotCentricCommand(drivebaseSubsystem, gamepad1);
+        intakeCommand= new IntakeCommand(intakeSubsystem, gamepad2);
+        shootRPM = new ShootRPM(shooterSubsystem, gamepad2);
     }
 
     @Override
     public void loop(){
-        controller.setP(kP);
-        controller.setD(kD);
-
         intakeCommand.execute();
+        shootRPM.execute();
+        robotCentricCommand.execute();
 
-        double power = controller.calculate(shooterSubsystem.getCurrentRPM(), targetRPM);
-        power = Math.max(0, Math.min(power, 1));
-
-        if (gamepad1.x) {
-            shooterSubsystem.setPower(power);
-            telemetry.addLine("pressed");
-        } else {
-            shooterSubsystem.stop();
+        if (gamepad2.right_bumper) {
+            gate.setPosition(0);
+        }else{
+            gate.setPosition(0.4);
         }
 
-        telemetry.addData("Shooter Power", power);
+        if (gamepad2.left_bumper){
+            feeder.setPosition(0.3);
+        }else{
+            feeder.setPosition(0.1);
+        }
+
         telemetry.addData("Current RPM", shooterSubsystem.getCurrentRPM());
         telemetry.addData("Button", gamepad1.x);
         telemetry.update();

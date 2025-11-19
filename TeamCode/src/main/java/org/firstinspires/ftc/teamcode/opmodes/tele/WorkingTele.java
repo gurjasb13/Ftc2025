@@ -11,6 +11,7 @@ import org.firstinspires.ftc.teamcode.subsystems.DrivebaseSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.Gate;
 import org.firstinspires.ftc.teamcode.subsystems.IntakeSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.ShooterSubsystem;
+import org.firstinspires.ftc.teamcode.subsystems.feeder;
 
 
 @TeleOp
@@ -23,7 +24,8 @@ public class WorkingTele extends OpMode {
     private IntakeSubsystem intakeSubsystem;
     private IntakeCommand intakeCommand;
 
-    private Gate gate;
+    Gate gate;
+    feeder feeder;
 
     private DrivebaseSubsystem drivebaseSubsystem;
     private RobotCentricCommand robotCentricCommand;
@@ -32,7 +34,8 @@ public class WorkingTele extends OpMode {
         shooterSubsystem = new ShooterSubsystem(hardwareMap);
         shootRPM = new ShootRPM(shooterSubsystem, gamepad2);
 
-        gate = new Gate(hardwareMap);
+        gate= new Gate(hardwareMap);
+        feeder= new feeder(hardwareMap);
 
         intakeSubsystem = new IntakeSubsystem(hardwareMap);
         intakeCommand= new IntakeCommand(intakeSubsystem, gamepad2);
@@ -46,6 +49,18 @@ public class WorkingTele extends OpMode {
         shootRPM.execute();
         intakeCommand.execute();
         robotCentricCommand.execute();
+
+        if (gamepad2.right_bumper) {
+            gate.setPosition(0);
+        }else{
+            gate.setPosition(0.4);
+        }
+
+        if (gamepad2.left_bumper){
+            feeder.setPosition(0.4);
+        }else{
+            feeder.setPosition(0.1);
+        }
     }
 
     @Override

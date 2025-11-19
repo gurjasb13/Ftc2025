@@ -18,9 +18,9 @@ public class IntakeCommand extends CommandBase {
 
     @Override
     public void execute() {
-        if (gamepad.right_stick_y == 1){
+        if (gamepad.left_stick_y == 1){
             intakeSubsystem.setPower(-1);
-        } else if (gamepad.right_stick_y == -1){
+        } else if (gamepad.left_stick_y == -1){
             intakeSubsystem.setPower(1);
         } else{
             intakeSubsystem.setPower(0);

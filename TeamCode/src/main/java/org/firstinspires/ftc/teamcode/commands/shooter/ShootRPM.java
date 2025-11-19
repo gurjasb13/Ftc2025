@@ -13,10 +13,9 @@ public class ShootRPM extends CommandBase {
     private final Gamepad gamepad;
     private final PDController controller;
 
-    public static double kP = 0.1;
+    public static double kP = 0.25;
     public static double kD = 0.01;
 
-    private double targetRPM = 0;
 
     public ShootRPM(ShooterSubsystem shooterSubsystem, Gamepad gamepad) {
         this.shooterSubsystem = shooterSubsystem;
@@ -31,11 +30,24 @@ public class ShootRPM extends CommandBase {
         controller.setP(kP);
         controller.setD(kD);
 
-        double power = controller.calculate(shooterSubsystem.getCurrentRPM(), targetRPM);
-        power = Math.max(0, Math.min(power, 1));
+        double closePower = controller.calculate(shooterSubsystem.getCurrentRPM(), 3000);
+        closePower = Math.max(0, Math.min(closePower, 1));
 
-        if (gamepad.a == true){
-            shooterSubsystem.setPower(power);
+        double mediumPower = controller.calculate(shooterSubsystem.getCurrentRPM(), 3700);
+        closePower = Math.max(0, Math.min(mediumPower, 1));
+
+        double farPower = controller.calculate(shooterSubsystem.getCurrentRPM(), 5700);
+        farPower = Math.max(0, Math.min(farPower, 1));
+
+        if (gamepad.x){
+            shooterSubsystem.setPower(closePower);
+        }else if(gamepad.a) {
+            shooterSubsystem.setPower(mediumPower);
+        } else if (gamepad.b) {
+            shooterSubsystem.setPower(farPower);
+        }
+        else{
+            shooterSubsystem.setPower(0);
         }
     }
 
