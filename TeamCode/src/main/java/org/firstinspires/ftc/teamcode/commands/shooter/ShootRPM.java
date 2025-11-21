@@ -30,24 +30,21 @@ public class ShootRPM extends CommandBase {
         controller.setP(kP);
         controller.setD(kD);
 
-        double closePower = controller.calculate(shooterSubsystem.getCurrentRPM(), 3000);
-        closePower = Math.max(0, Math.min(closePower, 1));
 
-        double mediumPower = controller.calculate(shooterSubsystem.getCurrentRPM(), 3700);
-        closePower = Math.max(0, Math.min(mediumPower, 1));
+        double mediumPower = controller.calculate(shooterSubsystem.getCurrentRPM(), 2700);
+        mediumPower = Math.max(0, Math.min(mediumPower, 1));
 
         double farPower = controller.calculate(shooterSubsystem.getCurrentRPM(), 5700);
         farPower = Math.max(0, Math.min(farPower, 1));
 
-        if (gamepad.x){
-            shooterSubsystem.setPower(closePower);
-        }else if(gamepad.a) {
+        if(gamepad.a) {
             shooterSubsystem.setPower(mediumPower);
         } else if (gamepad.b) {
             shooterSubsystem.setPower(farPower);
+        } else if(gamepad.x){
+            shooterSubsystem.setPower(-1);
         }
-        else{
-            shooterSubsystem.setPower(0);
+        else{shooterSubsystem.setPower(0);
         }
     }
 

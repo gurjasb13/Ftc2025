@@ -4,7 +4,6 @@ import com.bylazar.configurables.annotations.Configurable;
 import com.bylazar.telemetry.PanelsTelemetry;
 import com.bylazar.telemetry.TelemetryManager;
 import com.pedropathing.follower.Follower;
-import com.pedropathing.geometry.BezierCurve;
 import com.pedropathing.geometry.BezierLine;
 import com.pedropathing.geometry.Pose;
 import com.pedropathing.paths.PathChain;
@@ -12,16 +11,15 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-import org.firstinspires.ftc.teamcode.commands.shooter.ShootRPM;
 import org.firstinspires.ftc.teamcode.pedroPathing.Constants;
 import org.firstinspires.ftc.teamcode.subsystems.Gate;
 import org.firstinspires.ftc.teamcode.subsystems.IntakeSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.ShooterSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.feeder;
 
-@Autonomous(name = "Pedro Pathing Autonomous", group = "Autonomous")
+@Autonomous(name = "Red Far Start", group = "Autonomous")
 @Configurable // Panels
-public class PedroFirstAuto extends OpMode {
+public class redFar extends OpMode {
 
     private TelemetryManager panelsTelemetry; // Panels Telemetry instance
     public Follower follower; // Pedro Pathing follower instance
@@ -33,14 +31,14 @@ public class PedroFirstAuto extends OpMode {
     private Gate gate;
     private feeder feeder;
 
-    private ElapsedTime timer= new ElapsedTime();
+    private ElapsedTime timer = new ElapsedTime();
 
     @Override
     public void init() {
         panelsTelemetry = PanelsTelemetry.INSTANCE.getTelemetry();
 
         follower = Constants.createFollower(hardwareMap);
-        follower.setStartingPose(new Pose(56, 8, Math.toRadians(90)));
+        follower.setStartingPose(new Pose(88, 8, Math.toRadians(90)));
 
         paths = new Paths(follower); // Build paths
 
@@ -49,8 +47,8 @@ public class PedroFirstAuto extends OpMode {
 
         intakeSubsystem = new IntakeSubsystem(hardwareMap);
         shooterSubsystem = new ShooterSubsystem(hardwareMap);
-        gate= new Gate(hardwareMap);
-        feeder= new feeder(hardwareMap);
+        gate = new Gate(hardwareMap);
+        feeder = new feeder(hardwareMap);
     }
 
     @Override
@@ -74,35 +72,47 @@ public class PedroFirstAuto extends OpMode {
             Path1 = follower
                     .pathBuilder()
                     .addPath(
-                            new BezierLine(new Pose(56.000, 8.000), new Pose(57.430, 82.951))
+                            new BezierLine(new Pose(84.443, 7.657), new Pose(84.656, 21.696))
                     )
-                    .setLinearHeadingInterpolation(Math.toRadians(90), Math.toRadians(145))
+                    .setLinearHeadingInterpolation(Math.toRadians(90), Math.toRadians(65))
                     .build();
         }
     }
 
     public int autonomousPathUpdate() {
         switch (pathState) {
+
             case 0:
                 follower.followPath(paths.Path1);
-                shooterSubsystem.setPower(1);
-                intakeSubsystem.setPower(1);
+                shooterSubsystem.runToRPM(5500);
                 gate.setPosition(0.4);
                 feeder.setPosition(0.1);
+
+                timer.reset();  // start timing
                 pathState = 1;
                 break;
+
             case 1:
-                timer.reset();
-                pathState=2;
-                break;
-            case 2:
-                if(timer.seconds()>6){
-                    gate.setPosition(0);
-                    feeder.setPosition(0.4);
-                    pathState=3;
+                // 1 second before gate opens, turn on intake
+                if (timer.seconds() >= 5) {
+                    intakeSubsystem.setPower(1);  // start intake
                 }
-            case 3:
+
+                // At 6 seconds, open gate and feeder
+                if (timer.seconds() >= 6.0) {
+                    gate.setPosition(0);       // open gate
+                    feeder.setPosition(0.4);   // start feeding
+                    pathState = 2;             // move to next state or finish
+                }
                 break;
+
+            case 2:
+                if (timer.seconds()>7.5){
+                    intakeSubsystem.setPower(0);
+                    shooterSubsystem.setPower(0);
+                    break;
+                }
+
         }
         return pathState;
     }

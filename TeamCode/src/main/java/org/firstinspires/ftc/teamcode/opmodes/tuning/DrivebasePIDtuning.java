@@ -12,7 +12,6 @@ import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
 @Config
-@TeleOp(name = "Drivebase PID Tuning")
 public class DrivebasePIDtuning extends OpMode {
     private DcMotor rfmotor, lfmotor, rbmotor, lbmotor;
 

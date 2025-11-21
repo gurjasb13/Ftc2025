@@ -8,7 +8,7 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 
 public class VisionSubsystem extends SubsystemBase {
-    private final Limelight3A limelight;
+    public final Limelight3A limelight;
     private LLResult latestResult;
 
     private final double cameraHeight = 5;//change

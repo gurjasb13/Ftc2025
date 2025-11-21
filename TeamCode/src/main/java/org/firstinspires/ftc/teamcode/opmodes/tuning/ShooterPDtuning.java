@@ -18,8 +18,9 @@ import org.firstinspires.ftc.teamcode.subsystems.IntakeSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.ShooterSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.feeder;
 
-@TeleOp(name = "Shooter PD tuning")
+
 @Config
+@TeleOp
 public class ShooterPDtuning extends OpMode {
     ShooterSubsystem shooterSubsystem;
     IntakeSubsystem intakeSubsystem;
