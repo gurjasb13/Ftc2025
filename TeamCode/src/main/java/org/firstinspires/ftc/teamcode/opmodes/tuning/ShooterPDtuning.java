@@ -5,6 +5,8 @@ import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.tel
 
 import com.acmerobotics.dashboard.config.Config;
 import com.arcrobotics.ftclib.controller.PDController;
+import com.qualcomm.hardware.limelightvision.LLResult;
+import com.qualcomm.hardware.limelightvision.Limelight3A;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
@@ -22,14 +24,14 @@ import org.firstinspires.ftc.teamcode.subsystems.feeder;
 @Config
 @TeleOp
 public class ShooterPDtuning extends OpMode {
+
+    public static double targetRPM;
+
+    private Limelight3A limelight3A;
     ShooterSubsystem shooterSubsystem;
     IntakeSubsystem intakeSubsystem;
-    DrivebaseSubsystem drivebaseSubsystem;
     Gate gate;
-    feeder feeder;
-
     IntakeCommand intakeCommand;
-    RobotCentricCommand robotCentricCommand;
     ShootRPM shootRPM;
 
 
@@ -37,11 +39,10 @@ public class ShooterPDtuning extends OpMode {
     public void init(){
         shooterSubsystem= new ShooterSubsystem(hardwareMap);
         intakeSubsystem= new IntakeSubsystem(hardwareMap);
-        drivebaseSubsystem = new DrivebaseSubsystem(hardwareMap);
         gate= new Gate(hardwareMap);
-        feeder= new feeder(hardwareMap);
 
-        robotCentricCommand = new RobotCentricCommand(drivebaseSubsystem, gamepad1);
+        limelight3A= hardwareMap.get(Limelight3A.class, "limelight");
+
         intakeCommand= new IntakeCommand(intakeSubsystem, gamepad2);
         shootRPM = new ShootRPM(shooterSubsystem, gamepad2);
     }
@@ -49,8 +50,12 @@ public class ShooterPDtuning extends OpMode {
     @Override
     public void loop(){
         intakeCommand.execute();
-        shootRPM.execute();
-        robotCentricCommand.execute();
+
+        if (gamepad2.y){
+            shooterSubsystem.runToRPM(targetRPM);
+        } else{
+            shooterSubsystem.setPower(0);
+        }
 
         if (gamepad2.right_bumper) {
             gate.setPosition(0);
@@ -58,14 +63,19 @@ public class ShooterPDtuning extends OpMode {
             gate.setPosition(0.4);
         }
 
-        if (gamepad2.left_bumper){
-            feeder.setPosition(0.3);
-        }else{
-            feeder.setPosition(0.1);
+        LLResult latestResult = limelight3A.getLatestResult();
+
+        if (latestResult.isValid()) {
+            double ty = latestResult.getTy();
+
+            telemetry.addData("Has Target", true);
+            telemetry.addData("distance", ty);
+        }
+        else{
+            telemetry.addData("VISION", "No target detected");
         }
 
         telemetry.addData("Current RPM", shooterSubsystem.getCurrentRPM());
-        telemetry.addData("Button", gamepad1.x);
         telemetry.update();
     }
 }

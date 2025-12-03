@@ -34,7 +34,7 @@ public class ShootRPM extends CommandBase {
         double mediumPower = controller.calculate(shooterSubsystem.getCurrentRPM(), 2700);
         mediumPower = Math.max(0, Math.min(mediumPower, 1));
 
-        double farPower = controller.calculate(shooterSubsystem.getCurrentRPM(), 5700);
+        double farPower = controller.calculate(shooterSubsystem.getCurrentRPM(), 3500);
         farPower = Math.max(0, Math.min(farPower, 1));
 
         if(gamepad.a) {

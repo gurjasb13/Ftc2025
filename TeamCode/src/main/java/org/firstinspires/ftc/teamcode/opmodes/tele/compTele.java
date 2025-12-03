@@ -8,9 +8,8 @@ import com.arcrobotics.ftclib.command.CommandScheduler;
 
 import org.firstinspires.ftc.teamcode.commands.drivebase.RobotCentricCommand;
 import org.firstinspires.ftc.teamcode.commands.intake.IntakeCommand;
+import org.firstinspires.ftc.teamcode.commands.shooter.LimelightShotCommand;
 import org.firstinspires.ftc.teamcode.commands.shooter.ShootRPM;
-import org.firstinspires.ftc.teamcode.commands.shooter.Fire;
-import org.firstinspires.ftc.teamcode.commands.drivebase.VisionAlignCommand;
 
 import org.firstinspires.ftc.teamcode.subsystems.DrivebaseSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.Gate;
@@ -21,7 +20,7 @@ import org.firstinspires.ftc.teamcode.subsystems.feeder;
 import com.qualcomm.hardware.limelightvision.Limelight3A;
 
 @TeleOp
-public class limelightTele extends OpMode {
+public class compTele extends OpMode {
 
     private ShooterSubsystem shooterSubsystem;
     private ShootRPM shootRPM;
@@ -36,8 +35,7 @@ public class limelightTele extends OpMode {
     private feeder feeder;
 
     private Limelight3A limelight;
-    private LLResult result;
-    private VisionAlignCommand visionAlignCommand;
+    private LimelightShotCommand limelightShotCommand;
 
     @Override
     public void init() {
@@ -51,7 +49,6 @@ public class limelightTele extends OpMode {
         intakeCommand = new IntakeCommand(intakeSubsystem, gamepad2);
 
         gate = new Gate(hardwareMap);
-        feeder = new feeder(hardwareMap);
 
         drivebaseSubsystem = new DrivebaseSubsystem(hardwareMap);
         robotCentricCommand = new RobotCentricCommand(drivebaseSubsystem, gamepad1);
@@ -60,47 +57,31 @@ public class limelightTele extends OpMode {
         limelight.pipelineSwitch(0);
         limelight.start();
 
-        visionAlignCommand = new VisionAlignCommand(drivebaseSubsystem, limelight);
-
-        // default driving
-        CommandScheduler.getInstance().setDefaultCommand(drivebaseSubsystem, robotCentricCommand);
+        limelightShotCommand = new LimelightShotCommand(shooterSubsystem, limelight);
     }
 
     @Override
     public void loop() {
 
-        // Vision override
-        if (gamepad1.x) {
-            CommandScheduler.getInstance().schedule(visionAlignCommand);
-        } else {
-            CommandScheduler.getInstance().cancel(visionAlignCommand);
-        }
+        CommandScheduler.getInstance().run();
 
-        // Manual servos
-        if (gamepad2.right_bumper) gate.setPosition(0);
-        else gate.setPosition(0.4);
+        if (gamepad2.right_bumper)
+            gate.setPosition(0);
+        else
+            gate.setPosition(0.4);
 
-        if (gamepad2.left_bumper) feeder.setPosition(0.4);
-        else feeder.setPosition(0.1);
-
-        // NEW FIRE COMMAND
-        if (gamepad2.x) {
-            CommandScheduler.getInstance().schedule(
-                    new Fire(shooterSubsystem, intakeSubsystem, gate, 3000)
-            );
-        }
-
-        if (gamepad2.y) {
-            CommandScheduler.getInstance().schedule(
-                    new Fire(shooterSubsystem, intakeSubsystem, gate, 5000)
-            );
-        }
-
-        // run default shooter + intake logic
+        // run normal subsystem commands
+        robotCentricCommand.execute();
         shootRPM.execute();
         intakeCommand.execute();
 
-        CommandScheduler.getInstance().run();
+        if (gamepad2.y){
+            limelightShotCommand.execute();
+        }
+
+        telemetry.addData("shooter rpm", shooterSubsystem.getCurrentRPM());
+        telemetry.addData("distance", limelightShotCommand.getDistance(limelight.getLatestResult().getTy()));
+        telemetry.update();
     }
 
     @Override

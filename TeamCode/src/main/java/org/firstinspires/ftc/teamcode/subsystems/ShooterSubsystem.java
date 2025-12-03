@@ -72,4 +72,16 @@ public class ShooterSubsystem extends SubsystemBase {
 
         shooterMotor1.setPower(-power);
     }
+
+    public double calculateRPM(double d) {
+        return 0.00492*Math.pow(d,3)
+                - 0.4126*Math.pow(d,2)
+                + 15.939*d
+                + 2049.37;
+    }
+
+    public void runLimelightShot(double distance) {
+        double rpm = calculateRPM(distance);
+        runToRPM(rpm);
+    }
 }
