@@ -9,6 +9,7 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 public class ShooterSubsystem extends SubsystemBase {
 
     private final DcMotorEx shooterMotor1;
+    private final DcMotorEx shooterMotor2;
 
     // motor specs
     private static final double TICKS_PER_REV = 28;
@@ -19,22 +20,23 @@ public class ShooterSubsystem extends SubsystemBase {
     private final PDController controller;
 
     // tunables
-    public static double kP = 0.01;
+    public static double kP = 0.02;
     public static double kD = 0.01;
     public static double kF = 0.20;   // baseline feedforward to overcome friction
 
     public ShooterSubsystem(HardwareMap hardwareMap) {
         shooterMotor1 = hardwareMap.get(DcMotorEx.class, "shooterMotor1");
+        shooterMotor2 = hardwareMap.get(DcMotorEx.class, "shooterMotor2");
 
         shooterMotor1.setDirection(DcMotor.Direction.REVERSE);
 
         shooterMotor1.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         shooterMotor1.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        shooterMotor2.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        shooterMotor2.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
         controller = new PDController(kP, kD);
     }
-
-    // ---- Utility ----
 
     public double getCurrentRPM() {
         double ticksPerSec = shooterMotor1.getVelocity();
@@ -42,15 +44,15 @@ public class ShooterSubsystem extends SubsystemBase {
     }
 
     public void setPower(double power) {
+
         shooterMotor1.setPower(power);
+        shooterMotor2.setPower(power);
     }
-
     public void stop() {
+
         shooterMotor1.setPower(0);
+        shooterMotor2.setPower(0);
     }
-
-    // ---- Actual RPM Control ----
-
     public void runToRPM(double targetRPM) {
 
         double currentRPM = getCurrentRPM();
@@ -71,15 +73,17 @@ public class ShooterSubsystem extends SubsystemBase {
         power = Math.max(-1, Math.min(1.0, power));
 
         shooterMotor1.setPower(-power);
+        shooterMotor2.setPower(-power);
     }
-
     public double calculateRPM(double d) {
-        return 0.00492*Math.pow(d,3)
-                - 0.4126*Math.pow(d,2)
-                + 15.939*d
-                + 2049.37;
+        return 9.01121e-8*Math.pow(d,6)
+                - 3.92579e-5*Math.pow(d,5)
+                + 0.0069767*Math.pow(d,4)
+                - 0.642693*Math.pow(d,3)
+                + 32.13839*Math.pow(d,2)
+                - 815.39232*d
+                + 10747.4643;
     }
-
     public void runLimelightShot(double distance) {
         double rpm = calculateRPM(distance);
         runToRPM(rpm);

@@ -10,7 +10,7 @@ public class LimelightShotCommand extends CommandBase {
     private Limelight3A limelight;
     private final double cameraHeight = 5;
     private final double targetHeight = 29;
-    private final double cameraAngle = Math.toRadians(70);
+    private final double cameraAngle = Math.toRadians(20);
 
     public LimelightShotCommand(ShooterSubsystem shooter, Limelight3A limelight) {
         this.shooter = shooter;

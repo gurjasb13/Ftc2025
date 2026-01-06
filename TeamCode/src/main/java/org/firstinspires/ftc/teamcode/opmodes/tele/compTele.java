@@ -1,12 +1,12 @@
 package org.firstinspires.ftc.teamcode.opmodes.tele;
 
-import com.qualcomm.hardware.limelightvision.LLResult;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import com.arcrobotics.ftclib.command.CommandScheduler;
 
 import org.firstinspires.ftc.teamcode.commands.drivebase.RobotCentricCommand;
+import org.firstinspires.ftc.teamcode.commands.drivebase.VisionAlignCommand;
 import org.firstinspires.ftc.teamcode.commands.intake.IntakeCommand;
 import org.firstinspires.ftc.teamcode.commands.shooter.LimelightShotCommand;
 import org.firstinspires.ftc.teamcode.commands.shooter.ShootRPM;
@@ -30,6 +30,7 @@ public class compTele extends OpMode {
 
     private DrivebaseSubsystem drivebaseSubsystem;
     private RobotCentricCommand robotCentricCommand;
+    private VisionAlignCommand visionAlignCommand;
 
     private Gate gate;
     private feeder feeder;
@@ -50,37 +51,41 @@ public class compTele extends OpMode {
 
         gate = new Gate(hardwareMap);
 
-        drivebaseSubsystem = new DrivebaseSubsystem(hardwareMap);
-        robotCentricCommand = new RobotCentricCommand(drivebaseSubsystem, gamepad1);
-
         limelight = hardwareMap.get(Limelight3A.class, "limelight");
         limelight.pipelineSwitch(0);
         limelight.start();
+
+        drivebaseSubsystem = new DrivebaseSubsystem(hardwareMap);
+        robotCentricCommand = new RobotCentricCommand(drivebaseSubsystem, gamepad1);
+        visionAlignCommand= new VisionAlignCommand(drivebaseSubsystem, limelight);
 
         limelightShotCommand = new LimelightShotCommand(shooterSubsystem, limelight);
     }
 
     @Override
     public void loop() {
-
-        CommandScheduler.getInstance().run();
-
-        if (gamepad2.right_bumper)
-            gate.setPosition(0);
-        else
-            gate.setPosition(0.4);
-
-        // run normal subsystem commands
         robotCentricCommand.execute();
-        shootRPM.execute();
-        intakeCommand.execute();
 
-        if (gamepad2.y){
-            limelightShotCommand.execute();
+        if (gamepad1.x) {
+            visionAlignCommand.execute();
         }
 
+        //Mechanisms
+        if (gamepad2.right_bumper)
+            gate.setPosition(0.3);
+        else
+            gate.setPosition(0.9);
+        shootRPM.execute();
+        intakeCommand.execute();
+        double dist = limelightShotCommand.getDistance(limelight.getLatestResult().getTy());
+        if (limelight.getLatestResult() != null && gamepad2.y) {
+            shooterSubsystem.runLimelightShot(dist);
+        }
+
+        //Telemetry
         telemetry.addData("shooter rpm", shooterSubsystem.getCurrentRPM());
         telemetry.addData("distance", limelightShotCommand.getDistance(limelight.getLatestResult().getTy()));
+        telemetry.addData("calc RPM", shooterSubsystem.calculateRPM(dist));
         telemetry.update();
     }
 

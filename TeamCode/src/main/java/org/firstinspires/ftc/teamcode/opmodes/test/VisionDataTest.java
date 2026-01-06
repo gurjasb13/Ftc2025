@@ -8,6 +8,7 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.teamcode.commands.intake.IntakeCommand;
+import org.firstinspires.ftc.teamcode.commands.shooter.LimelightShotCommand;
 import org.firstinspires.ftc.teamcode.commands.shooter.ShootRPM;
 import org.firstinspires.ftc.teamcode.subsystems.DrivebaseSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.Gate;
@@ -20,6 +21,7 @@ import org.firstinspires.ftc.teamcode.subsystems.feeder;
 @TeleOp
 public class VisionDataTest extends OpMode {
     private Limelight3A limelight;
+    private LimelightShotCommand limelightShotCommand;
 
     public static double targetRPM;
     ShooterSubsystem shooterSubsystem;
@@ -38,7 +40,9 @@ public class VisionDataTest extends OpMode {
         shooterSubsystem= new ShooterSubsystem(hardwareMap);
         intakeSubsystem= new IntakeSubsystem(hardwareMap);
         gate= new Gate(hardwareMap);
+
         intakeCommand= new IntakeCommand(intakeSubsystem, gamepad2);
+        limelightShotCommand= new LimelightShotCommand(shooterSubsystem, limelight);
         shootRPM = new ShootRPM(shooterSubsystem, gamepad2);
 
     }
@@ -52,7 +56,7 @@ public class VisionDataTest extends OpMode {
             double ty = latestResult.getTy();
 
             telemetry.addData("Has Target", true);
-            telemetry.addData("distance", ty);
+            telemetry.addData("distance", limelightShotCommand.getDistance(ty));
         }
 
         else {

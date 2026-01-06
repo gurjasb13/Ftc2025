@@ -4,6 +4,7 @@ import com.bylazar.configurables.annotations.Configurable;
 import com.bylazar.telemetry.PanelsTelemetry;
 import com.bylazar.telemetry.TelemetryManager;
 import com.pedropathing.follower.Follower;
+import com.pedropathing.geometry.BezierCurve;
 import com.pedropathing.geometry.BezierLine;
 import com.pedropathing.geometry.Pose;
 import com.pedropathing.paths.PathChain;
@@ -29,7 +30,6 @@ public class blueClose extends OpMode {
     private IntakeSubsystem intakeSubsystem;
     private ShooterSubsystem shooterSubsystem;
     private Gate gate;
-    private feeder feeder;
 
     private ElapsedTime timer = new ElapsedTime();
 
@@ -44,7 +44,7 @@ public class blueClose extends OpMode {
         panelsTelemetry = PanelsTelemetry.INSTANCE.getTelemetry();
 
         follower = Constants.createFollower(hardwareMap);
-        follower.setStartingPose(new Pose(24, 127, Math.toRadians(143)));
+        follower.setStartingPose(new Pose(23, 126, Math.toRadians(148)));
 
         paths = new Paths(follower);
 
@@ -54,7 +54,6 @@ public class blueClose extends OpMode {
         intakeSubsystem = new IntakeSubsystem(hardwareMap);
         shooterSubsystem = new ShooterSubsystem(hardwareMap);
         gate = new Gate(hardwareMap);
-        feeder = new feeder(hardwareMap);
     }
 
     @Override
@@ -96,23 +95,23 @@ public class blueClose extends OpMode {
             Path1 = follower
                     .pathBuilder()
                     .addPath(
-                            new BezierLine(new Pose(24.248, 126.558), new Pose(43.391, 110.606))
+                            new BezierLine(new Pose(23.000, 126.000), new Pose(59.770, 100.396))
                     )
-                    .setLinearHeadingInterpolation(Math.toRadians(143), Math.toRadians(143))
+                    .setLinearHeadingInterpolation(Math.toRadians(148), Math.toRadians(148))
                     .build();
 
             Path2 = follower
                     .pathBuilder()
                     .addPath(
-                            new BezierLine(new Pose(43.391, 110.606), new Pose(56.579, 87.208))
+                            new BezierLine(new Pose(59.770, 100.396), new Pose(56.579, 85.719))
                     )
-                    .setLinearHeadingInterpolation(Math.toRadians(143), Math.toRadians(0))
+                    .setLinearHeadingInterpolation(Math.toRadians(147), Math.toRadians(0))
                     .build();
 
             Path3 = follower
                     .pathBuilder()
                     .addPath(
-                            new BezierLine(new Pose(56.579, 87.208), new Pose(25.950, 86.570))
+                            new BezierLine(new Pose(56.579, 85.719), new Pose(16.804, 84.018))
                     )
                     .setLinearHeadingInterpolation(Math.toRadians(0), Math.toRadians(0))
                     .build();
@@ -120,23 +119,23 @@ public class blueClose extends OpMode {
             Path4 = follower
                     .pathBuilder()
                     .addPath(
-                            new BezierLine(new Pose(25.950, 86.570), new Pose(42.966, 109.968))
+                            new BezierLine(new Pose(16.804, 84.018), new Pose(59.982, 100.396))
                     )
-                    .setLinearHeadingInterpolation(Math.toRadians(0), Math.toRadians(143))
+                    .setLinearHeadingInterpolation(Math.toRadians(0), Math.toRadians(146))
                     .build();
 
             Path5 = follower
                     .pathBuilder()
                     .addPath(
-                            new BezierLine(new Pose(42.966, 109.968), new Pose(59.982, 62.747))
+                            new BezierLine(new Pose(59.982, 100.396), new Pose(59.131, 60.408))
                     )
-                    .setLinearHeadingInterpolation(Math.toRadians(143), Math.toRadians(0))
+                    .setLinearHeadingInterpolation(Math.toRadians(148), Math.toRadians(0))
                     .build();
 
             Path6 = follower
                     .pathBuilder()
                     .addPath(
-                            new BezierLine(new Pose(59.982, 62.747), new Pose(26.588, 61.897))
+                            new BezierLine(new Pose(59.131, 60.408), new Pose(19.994, 59.770))
                     )
                     .setLinearHeadingInterpolation(Math.toRadians(0), Math.toRadians(0))
                     .build();
@@ -144,17 +143,21 @@ public class blueClose extends OpMode {
             Path7 = follower
                     .pathBuilder()
                     .addPath(
-                            new BezierLine(new Pose(26.588, 61.897), new Pose(43.179, 110.606))
+                            new BezierCurve(
+                                    new Pose(19.994, 59.770),
+                                    new Pose(87.208, 54.665),
+                                    new Pose(59.982, 100.183)
+                            )
                     )
-                    .setLinearHeadingInterpolation(Math.toRadians(0), Math.toRadians(143))
+                    .setLinearHeadingInterpolation(Math.toRadians(0), Math.toRadians(148))
                     .build();
 
             Path8 = follower
                     .pathBuilder()
                     .addPath(
-                            new BezierLine(new Pose(43.179, 110.606), new Pose(42.328, 55.728))
+                            new BezierLine(new Pose(59.982, 100.183), new Pose(42.328, 55.728))
                     )
-                    .setLinearHeadingInterpolation(Math.toRadians(143), Math.toRadians(143))
+                    .setLinearHeadingInterpolation(Math.toRadians(148), Math.toRadians(148))
                     .build();
         }
     }
@@ -163,27 +166,24 @@ public class blueClose extends OpMode {
 
             case 0:
                 follower.followPath(paths.Path1);
-                shooterTargetRPM = 3100;
-                gate.setPosition(0.4);
-                feeder.setPosition(0.1);
-                timer.reset();
+                shooterTargetRPM = 2850;
+                gate.setPosition(0.9);
                 pathState = 1;
                 break;
 
             case 1:
-                if (timer.seconds() >= 5.0) {
+                if (!follower.isBusy() && Math.abs(shooterSubsystem.getCurrentRPM() - 2850) <= 150) {
                     intakeSubsystem.setPower(1);
-                    gate.setPosition(0);
-                    feeder.setPosition(0.4);
+                    gate.setPosition(0.3);
+                    timer.reset();
                     pathState = 2;
                 }
                 break;
 
             case 2:
-                if (timer.seconds() > 6.5) {
-                    shooterTargetRPM = 0;
-                    gate.setPosition(0.4);
-                    feeder.setPosition(0.1);
+                if (timer.seconds() > 3.0) {
+                    shooterSubsystem.setPower(0);
+                    gate.setPosition(0.9);
                     follower.followPath(paths.Path2);
                     pathState = 3;
                 }
@@ -199,29 +199,28 @@ public class blueClose extends OpMode {
 
             case 4:
                 if (!follower.isBusy()) {
-                    shooterTargetRPM = 3100;
+                    shooterTargetRPM =2850;
                     follower.setMaxPower(1.0);
+                    intakeSubsystem.setPower(0);
                     follower.followPath(paths.Path4);
-                    timer.reset();
                     pathState = 5;
                 }
                 break;
 
             case 5:
-                if (!follower.isBusy() && timer.seconds() > 4.0) {
-                    gate.setPosition(0);
-                    feeder.setPosition(0.4);
+                if (!follower.isBusy() && (Math.abs(shooterSubsystem.getCurrentRPM() - 2850) <= 150)) {
+                    intakeSubsystem.setPower(1);
+                    gate.setPosition(0.3);
                     timer.reset();
                     pathState = 6;
                 }
                 break;
 
             case 6:
-                if (timer.seconds() > 2) {
+                if (timer.seconds() > 3.0) {
                     follower.followPath(paths.Path5);
-                    shooterTargetRPM = 0;
-                    gate.setPosition(0.4);
-                    feeder.setPosition(0.1);
+                    shooterSubsystem.setPower(0);
+                    gate.setPosition(0.9);
                     pathState = 7;
                 }
                 break;
@@ -236,29 +235,30 @@ public class blueClose extends OpMode {
 
             case 8:
                 if (!follower.isBusy()) {
-                    shooterTargetRPM = 3200;
+                    shooterTargetRPM = 2850;
                     follower.setMaxPower(1.0);
+                    intakeSubsystem.setPower(0);
                     follower.followPath(paths.Path7);
-                    timer.reset();
                     pathState = 9;
                 }
                 break;
 
             case 9:
-                if (!follower.isBusy()&&timer.seconds()>4.0) {
-                    gate.setPosition(0);
-                    feeder.setPosition(0.4);
+                if (!follower.isBusy()&&(Math.abs(shooterSubsystem.getCurrentRPM() - 2850) <= 150)) {
+                    intakeSubsystem.setPower(1);
+                    gate.setPosition(0.3);
                     timer.reset();
                     pathState = 10;
                 }
                 break;
 
             case 10:
-                if (!follower.isBusy() && timer.seconds()>2){
+                if (!follower.isBusy() && timer.seconds()>3.0){
                     intakeSubsystem.setPower(0);
                     shooterSubsystem.setPower(0);
                     follower.followPath(paths.Path8);
                 }
+                break;
         }
         return pathState;
     }

@@ -1,7 +1,5 @@
 package org.firstinspires.ftc.teamcode.subsystems;
 
-import static org.firstinspires.ftc.teamcode.pedroPathing.Tuning.follower;
-
 import com.arcrobotics.ftclib.command.SubsystemBase;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
@@ -61,9 +59,6 @@ public class DrivebaseSubsystem extends SubsystemBase {
         return lateral / ticksPerInch;
     }
 
-    public double getHeading() {
-        return follower.getPose().getHeading(); // radians
-    }
 
     public void stop() {
         drive(0, 0, 0);
