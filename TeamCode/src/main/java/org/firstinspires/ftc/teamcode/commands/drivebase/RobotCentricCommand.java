@@ -16,10 +16,15 @@ public class RobotCentricCommand extends CommandBase{
     }
 
     public void execute(){
-        double x = gamepad.left_stick_x;
-        double y = -gamepad.left_stick_y;
-        double rx = gamepad.right_stick_x;
+        if (gamepad.a){
+            drivebaseSubsystem.defend();
+        }
+        else {
+            double x = gamepad.left_stick_x;
+            double y = -gamepad.left_stick_y;
+            double rx = gamepad.right_stick_x;
 
-        drivebaseSubsystem.drive(x, y, rx);
+            drivebaseSubsystem.drive(x, y, rx);
+        }
     }
 }

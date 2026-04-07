@@ -55,6 +55,7 @@ public class redClose extends OpMode {
         shooterSubsystem = new ShooterSubsystem(hardwareMap);
         gate = new Gate(hardwareMap);
     }
+
     @Override
     public void loop() {
         follower.update();
@@ -78,8 +79,8 @@ public class redClose extends OpMode {
         power = Math.max(0, Math.min(power, 1));
         shooterSubsystem.setPower(power);
     }
-    public static class Paths {
 
+    public static class Paths {
         public PathChain Path1;
         public PathChain Path2;
         public PathChain Path3;
@@ -88,90 +89,134 @@ public class redClose extends OpMode {
         public PathChain Path6;
         public PathChain Path7;
         public PathChain Path8;
+        public PathChain Path9;
+        public PathChain Path10;
+        public PathChain Path11;
 
         public Paths(Follower follower) {
-            Path1 = follower
-                    .pathBuilder()
-                    .addPath(
-                            new BezierLine(new Pose(121.000, 125.000), new Pose(86.145, 99.332))
-                    )
-                    .setLinearHeadingInterpolation(Math.toRadians(35), Math.toRadians(36))
-                    .build();
+            Path1 = follower.pathBuilder().addPath(
+                            new BezierLine(
+                                    new Pose(121.000, 125.000),
 
-            Path2 = follower
-                    .pathBuilder()
-                    .addPath(
-                            new BezierLine(new Pose(86.145, 99.332), new Pose(87.208, 85.294))
-                    )
-                    .setLinearHeadingInterpolation(Math.toRadians(36), Math.toRadians(180))
-                    .build();
-
-            Path3 = follower
-                    .pathBuilder()
-                    .addPath(
-                            new BezierLine(new Pose(87.208, 85.294), new Pose(128.473, 83.592))
-                    )
-                    .setLinearHeadingInterpolation(Math.toRadians(180), Math.toRadians(180))
-                    .build();
-
-            Path4 = follower
-                    .pathBuilder()
-                    .addPath(
-                            new BezierLine(new Pose(128.473, 83.592), new Pose(86.145, 99.120))
-                    )
-                    .setLinearHeadingInterpolation(Math.toRadians(180), Math.toRadians(36))
-                    .build();
-
-            Path5 = follower
-                    .pathBuilder()
-                    .addPath(
-                            new BezierLine(new Pose(86.145, 99.120), new Pose(86.570, 59.982))
-                    )
-                    .setLinearHeadingInterpolation(Math.toRadians(35), Math.toRadians(180))
-                    .build();
-
-            Path6 = follower
-                    .pathBuilder()
-                    .addPath(
-                            new BezierLine(new Pose(86.570, 59.982), new Pose(125.282, 58.706))
-                    )
-                    .setLinearHeadingInterpolation(Math.toRadians(180), Math.toRadians(180))
-                    .build();
-
-            Path7 = follower
-                    .pathBuilder()
-                    .addPath(
-                            new BezierCurve(
-                                    new Pose(125.282, 58.706),
-                                    new Pose(65.087, 54.239),
-                                    new Pose(86.145, 99.332)
+                                    new Pose(87.329, 98.939)
                             )
-                    )
-                    .setLinearHeadingInterpolation(Math.toRadians(180), Math.toRadians(36))
+                    ).setLinearHeadingInterpolation(Math.toRadians(35), Math.toRadians(36))
+
                     .build();
 
-            Path8 = follower
-                    .pathBuilder()
-                    .addPath(
-                            new BezierLine(new Pose(86.145, 99.332), new Pose(95.929, 74.446))
-                    )
-                    .setTangentHeadingInterpolation()
+            Path2 = follower.pathBuilder().addPath(
+                            new BezierLine(
+                                    new Pose(87.329, 98.939),
+
+                                    new Pose(87.208, 85.294)
+                            )
+                    ).setLinearHeadingInterpolation(Math.toRadians(36), Math.toRadians(180))
+
+                    .build();
+
+            Path3 = follower.pathBuilder().addPath(
+                            new BezierLine(
+                                    new Pose(87.208, 85.294),
+
+                                    new Pose(123.624, 84.208)
+                            )
+                    ).setLinearHeadingInterpolation(Math.toRadians(180), Math.toRadians(180))
+
+                    .build();
+
+            Path4 = follower.pathBuilder().addPath(
+                            new BezierLine(
+                                    new Pose(123.624, 84.208),
+
+                                    new Pose(87.307, 99.151)
+                            )
+                    ).setLinearHeadingInterpolation(Math.toRadians(180), Math.toRadians(34))
+
+                    .build();
+
+            Path5 = follower.pathBuilder().addPath(
+                            new BezierLine(
+                                    new Pose(87.307, 99.151),
+
+                                    new Pose(85.932, 58.493)
+                            )
+                    ).setLinearHeadingInterpolation(Math.toRadians(34), Math.toRadians(180))
+
+                    .build();
+
+            Path6 = follower.pathBuilder().addPath(
+                            new BezierLine(
+                                    new Pose(85.932, 58.493),
+
+                                    new Pose(125.528, 58.505)
+                            )
+                    ).setLinearHeadingInterpolation(Math.toRadians(180), Math.toRadians(180))
+
+                    .build();
+
+            Path7 = follower.pathBuilder().addPath(
+                            new BezierCurve(
+                                    new Pose(125.528, 58.505),
+                                    new Pose(65.087, 54.239),
+                                    new Pose(87.307, 98.927)
+                            )
+                    ).setLinearHeadingInterpolation(Math.toRadians(180), Math.toRadians(36))
+
+                    .build();
+
+            Path8 = follower.pathBuilder().addPath(
+                            new BezierLine(
+                                    new Pose(87.307, 98.927),
+
+                                    new Pose(85.428, 35.131)
+                            )
+                    ).setLinearHeadingInterpolation(Math.toRadians(36), Math.toRadians(180))
+
+                    .build();
+
+            Path9 = follower.pathBuilder().addPath(
+                            new BezierLine(
+                                    new Pose(85.428, 35.131),
+
+                                    new Pose(126.507, 34.944)
+                            )
+                    ).setLinearHeadingInterpolation(Math.toRadians(180), Math.toRadians(180))
+
+                    .build();
+
+            Path10 = follower.pathBuilder().addPath(
+                            new BezierLine(
+                                    new Pose(126.507, 34.944),
+
+                                    new Pose(87.166, 99.082)
+                            )
+                    ).setLinearHeadingInterpolation(Math.toRadians(180), Math.toRadians(36))
+
+                    .build();
+
+            Path11 = follower.pathBuilder().addPath(
+                            new BezierLine(
+                                    new Pose(87.166, 99.082),
+
+                                    new Pose(85.874, 58.350)
+                            )
+                    ).setLinearHeadingInterpolation(Math.toRadians(36), Math.toRadians(36))
+
                     .build();
         }
     }
-
     public int autonomousPathUpdate() {
         switch (pathState) {
 
             case 0:
                 follower.followPath(paths.Path1);
-                shooterTargetRPM = 2850;
+                shooterTargetRPM = 4000;
                 gate.setPosition(0.9);
                 pathState = 1;
                 break;
 
             case 1:
-                if (!follower.isBusy() && (Math.abs(shooterSubsystem.getCurrentRPM() - 2850) <= 150)) {
+                if (!follower.isBusy() && Math.abs(shooterSubsystem.getCurrentRPM() - 4000) <= 50) {
                     intakeSubsystem.setPower(1);
                     gate.setPosition(0.3);
                     timer.reset();
@@ -190,7 +235,7 @@ public class redClose extends OpMode {
 
             case 3:
                 if (!follower.isBusy()) {
-                    follower.setMaxPower(0.4);
+                    follower.setMaxPower(0.7);
                     follower.followPath(paths.Path3);
                     pathState = 4;
                 }
@@ -198,16 +243,16 @@ public class redClose extends OpMode {
 
             case 4:
                 if (!follower.isBusy()) {
-                    shooterTargetRPM =2850;
+                    shooterTargetRPM = 4000;
                     follower.setMaxPower(1.0);
-                    intakeSubsystem.setPower(0);
+                    intakeSubsystem.setPower(0.5);
                     follower.followPath(paths.Path4);
                     pathState = 5;
                 }
                 break;
 
             case 5:
-                if (!follower.isBusy() && (Math.abs(shooterSubsystem.getCurrentRPM() - 2850) <= 150)) {
+                if (!follower.isBusy() && (Math.abs(shooterSubsystem.getCurrentRPM() - 4000) <= 50)) {
                     intakeSubsystem.setPower(1);
                     gate.setPosition(0.3);
                     timer.reset();
@@ -226,24 +271,23 @@ public class redClose extends OpMode {
 
             case 7:
                 if (!follower.isBusy()) {
-                    follower.setMaxPower(0.4);
+                    follower.setMaxPower(0.7);
                     follower.followPath(paths.Path6);
                     pathState = 8;
                 }
                 break;
-
             case 8:
                 if (!follower.isBusy()) {
-                    shooterTargetRPM = 2850;
+                    shooterTargetRPM = 4000;
                     follower.setMaxPower(1.0);
-                    intakeSubsystem.setPower(0);
+                    intakeSubsystem.setPower(0.5);
                     follower.followPath(paths.Path7);
                     pathState = 9;
                 }
                 break;
 
             case 9:
-                if (!follower.isBusy()&&(Math.abs(shooterSubsystem.getCurrentRPM() - 2850) <= 150)) {
+                if (!follower.isBusy() && (Math.abs(shooterSubsystem.getCurrentRPM() - 4000) <= 50)) {
                     intakeSubsystem.setPower(1);
                     gate.setPosition(0.3);
                     timer.reset();
@@ -252,14 +296,51 @@ public class redClose extends OpMode {
                 break;
 
             case 10:
-                if (!follower.isBusy() && timer.seconds()>3.0){
-                    intakeSubsystem.setPower(0);
-                    shooterSubsystem.setPower(0);
+                if (timer.seconds() > 3.0) {
                     follower.followPath(paths.Path8);
+                    shooterSubsystem.setPower(0);
+                    gate.setPosition(0.9);
+                    pathState = 11;
+                }
+                break;
+
+            case 11:
+                if (!follower.isBusy()) {
+                    follower.setMaxPower(0.6);
+                    follower.followPath(paths.Path9);
+                    pathState = 12;
+                }
+                break;
+
+            case 12:
+                if (!follower.isBusy()) {
+                    shooterTargetRPM = 4000;
+                    follower.setMaxPower(1.0);
+                    intakeSubsystem.setPower(0.5);
+                    follower.followPath(paths.Path10);
+                    pathState = 13;
+                }
+                break;
+
+            case 13:
+                if (!follower.isBusy() && (Math.abs(shooterSubsystem.getCurrentRPM() - 4000) <= 50)) {
+                    intakeSubsystem.setPower(1);
+                    gate.setPosition(0.3);
+                    timer.reset();
+                    pathState = 14;
+                }
+                break;
+
+            case 14:
+                if (timer.seconds() > 3.0) {
+                    follower.followPath(paths.Path11);
+                    shooterSubsystem.setPower(0);
+                    intakeSubsystem.setPower(0);
+                    gate.setPosition(0.9);
                 }
                 break;
         }
+
         return pathState;
     }
-
 }

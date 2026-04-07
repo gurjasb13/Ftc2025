@@ -19,9 +19,9 @@ import org.firstinspires.ftc.teamcode.subsystems.feeder;
 
 import com.arcrobotics.ftclib.controller.PDController;
 
-@Autonomous(name = "Blue Far Start", group = "Autonomous")
+@Autonomous(name = "Blue Far Pre", group = "Autonomous")
 @Configurable
-public class blueFar extends OpMode {
+public class blueFarPre extends OpMode {
 
     private TelemetryManager panelsTelemetry;
     public Follower follower;
@@ -130,7 +130,7 @@ public class blueFar extends OpMode {
 
                                     new Pose(54.820, 15.907)
                             )
-                    ).setLinearHeadingInterpolation(Math.toRadians(0), Math.toRadians(121))
+                    ).setLinearHeadingInterpolation(Math.toRadians(0), Math.toRadians(116))
 
                     .build();
 
@@ -140,7 +140,7 @@ public class blueFar extends OpMode {
 
                                     new Pose(46.221, 15.291)
                             )
-                    ).setLinearHeadingInterpolation(Math.toRadians(121), Math.toRadians(0))
+                    ).setLinearHeadingInterpolation(Math.toRadians(115), Math.toRadians(0))
 
                     .build();
 
@@ -150,7 +150,7 @@ public class blueFar extends OpMode {
 
                                     new Pose(15.677, 12.317)
                             )
-                    ).setLinearHeadingInterpolation(Math.toRadians(0), Math.toRadians(0))
+                    ).setLinearHeadingInterpolation(Math.toRadians(121), Math.toRadians(0))
 
                     .build();
 
@@ -200,7 +200,7 @@ public class blueFar extends OpMode {
 
                                     new Pose(54.868, 16.348)
                             )
-                    ).setLinearHeadingInterpolation(Math.toRadians(0), Math.toRadians(121))
+                    ).setLinearHeadingInterpolation(Math.toRadians(0), Math.toRadians(122))
 
                     .build();
 
@@ -208,9 +208,9 @@ public class blueFar extends OpMode {
                             new BezierLine(
                                     new Pose(54.868, 16.348),
 
-                                    new Pose(54, 46.806)
+                                    new Pose(59.795, 46.806)
                             )
-                    ).setLinearHeadingInterpolation(Math.toRadians(118), Math.toRadians(118))
+                    ).setLinearHeadingInterpolation(Math.toRadians(119), Math.toRadians(118))
 
                     .build();
         }
@@ -220,13 +220,13 @@ public class blueFar extends OpMode {
             case 0:
                 follower.followPath(paths.Path1);
 
-                shooterTargetRPM = 5200;
+                shooterTargetRPM = 5150;
                 gate.setPosition(0.9);
                 pathState = 1;
                 break;
 
             case 1:
-                if ((Math.abs(shooterSubsystem.getCurrentRPM() - 5200) <= 150)) {
+                if ((Math.abs(shooterSubsystem.getCurrentRPM() - 5150) <= 150)) {
                     intakeSubsystem.setPower(1);
                     gate.setPosition(0.3);
                     timer.reset();
@@ -238,119 +238,74 @@ public class blueFar extends OpMode {
                 if (timer.seconds() > 3&& !follower.isBusy()) {
                     gate.setPosition(0.9);
                     shooterSubsystem.setPower(0);
-                    follower.followPath(paths.Path2);
+                    follower.followPath(paths.Path6);
                     pathState=3;
                     break;
                 }
                 break;
+
             case 3:
                 if (!follower.isBusy()){
                     follower.setMaxPower(0.6);
-                    follower.followPath(paths.Path3);
+                    follower.followPath(paths.Path7);
                     timer.reset();
                     pathState=4;
                     break;
                 }
                 break;
             case 4:
-                if (timer.seconds() > 3 && !follower.isBusy()){
-                    follower.setMaxPower(1.0);
-                    follower.followPath(paths.Path4);
-                    intakeSubsystem.setPower(0.7);
-                    shooterTargetRPM=5200;
+                if (!follower.isBusy()){
+                    follower.setMaxPower(0.6);
+                    follower.followPath(paths.Path8);
+                    timer.reset();
                     pathState=5;
                     break;
                 }
                 break;
             case 5:
-                if (!follower.isBusy()&&(Math.abs(shooterSubsystem.getCurrentRPM() - 5200) <= 50)){
-                    intakeSubsystem.setPower(1);
-                    gate.setPosition(0.3);
+                if (!follower.isBusy()){
+                    follower.setMaxPower(0.6);
+                    follower.followPath(paths.Path9);
                     timer.reset();
                     pathState=6;
                     break;
                 }
                 break;
             case 6:
-                if (!follower.isBusy() && timer.seconds()>3){
-                    shooterSubsystem.setPower(0);
-                    gate.setPosition(0.9);
-                    follower.followPath(paths.Path5);
+                if (!follower.isBusy()){
+                    follower.setMaxPower(0.6);
+                    follower.followPath(paths.Path10);
+                    timer.reset();
                     pathState=7;
                     break;
                 }
                 break;
             case 7:
-                if (!follower.isBusy()){
-                    follower.setMaxPower(0.6);
-                    follower.followPath(paths.Path6);
-                    timer.reset();
+                if (!follower.isBusy()) {
+                    intakeSubsystem.setPower(0.7);
+                    shooterTargetRPM=5200;
+                    follower.setMaxPower(1);
+                    follower.followPath(paths.Path11);
                     pathState=8;
                     break;
                 }
                 break;
+
             case 8:
-                if (!follower.isBusy()){
-                    follower.setMaxPower(0.6);
-                    follower.followPath(paths.Path7);
+                if (!follower.isBusy()&&(Math.abs(shooterSubsystem.getCurrentRPM() - 5200) <= 50)){
+                    intakeSubsystem.setPower(1.0);
+                    gate.setPosition(0.3);
                     timer.reset();
                     pathState=9;
                     break;
                 }
                 break;
             case 9:
-                if (!follower.isBusy()){
-                    follower.setMaxPower(0.6);
-                    follower.followPath(paths.Path8);
-                    timer.reset();
-                    pathState=10;
-                    break;
-                }
-                break;
-            case 10:
-                if (!follower.isBusy()){
-                    follower.setMaxPower(0.6);
-                    follower.followPath(paths.Path9);
-                    timer.reset();
-                    pathState=11;
-                    break;
-                }
-                break;
-            case 11:
-                if (!follower.isBusy()){
-                    follower.setMaxPower(0.6);
-                    follower.followPath(paths.Path10);
-                    timer.reset();
-                    pathState=12;
-                    break;
-                }
-                break;
-            case 12:
-                if (!follower.isBusy()) {
-                    intakeSubsystem.setPower(0.7);
-                    shooterTargetRPM=5200;
-                    follower.setMaxPower(1);
-                    follower.followPath(paths.Path11);
-                    pathState=13;
-                    break;
-                }
-                break;
-
-            case 13:
-                if (!follower.isBusy()&&(Math.abs(shooterSubsystem.getCurrentRPM() - 5200) <= 50)){
-                    intakeSubsystem.setPower(1.0);
-                    gate.setPosition(0.3);
-                    timer.reset();
-                    pathState=14;
-                    break;
-                }
-                break;
-            case 14:
                 if (timer.seconds()>3 && !follower.isBusy()){
                     gate.setPosition(0.3);
                     intakeSubsystem.setPower(0);
                     shooterSubsystem.setPower(0);
-                    follower.followPath(paths.Path12);
+                    follower.followPath(paths.Path6);
                     break;
                 }
                 break;

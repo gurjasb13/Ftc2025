@@ -7,6 +7,7 @@ import com.arcrobotics.ftclib.command.CommandScheduler;
 
 import org.firstinspires.ftc.teamcode.commands.drivebase.RobotCentricCommand;
 import org.firstinspires.ftc.teamcode.commands.drivebase.VisionAlignCommand;
+import org.firstinspires.ftc.teamcode.commands.drivebase.holdCommand;
 import org.firstinspires.ftc.teamcode.commands.intake.IntakeCommand;
 import org.firstinspires.ftc.teamcode.commands.shooter.LimelightShotCommand;
 import org.firstinspires.ftc.teamcode.commands.shooter.ShootRPM;
@@ -31,6 +32,8 @@ public class compTele extends OpMode {
     private DrivebaseSubsystem drivebaseSubsystem;
     private RobotCentricCommand robotCentricCommand;
     private VisionAlignCommand visionAlignCommand;
+
+    private holdCommand holdCommand;
 
     private Gate gate;
     private feeder feeder;
@@ -60,6 +63,7 @@ public class compTele extends OpMode {
         visionAlignCommand= new VisionAlignCommand(drivebaseSubsystem, limelight);
 
         limelightShotCommand = new LimelightShotCommand(shooterSubsystem, limelight);
+        holdCommand= new holdCommand(intakeSubsystem);
     }
 
     @Override
@@ -69,7 +73,6 @@ public class compTele extends OpMode {
         if (gamepad1.x) {
             visionAlignCommand.execute();
         }
-
         //Mechanisms
         if (gamepad2.right_bumper)
             gate.setPosition(0.3);
@@ -80,6 +83,12 @@ public class compTele extends OpMode {
         double dist = limelightShotCommand.getDistance(limelight.getLatestResult().getTy());
         if (limelight.getLatestResult() != null && gamepad2.y) {
             shooterSubsystem.runLimelightShot(dist);
+        }
+
+        if (gamepad1.right_trigger==1){{
+            holdCommand.execute();
+        }}else{
+            intakeCommand.execute();
         }
 
         //Telemetry

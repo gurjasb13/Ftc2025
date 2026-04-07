@@ -55,12 +55,16 @@ public class VisionDataTest extends OpMode {
         if (latestResult.isValid()) {
             double ty = latestResult.getTy();
 
-            telemetry.addData("Has Target", true);
+            telemetry.addData("Has Tzzarget", true);
             telemetry.addData("distance", limelightShotCommand.getDistance(ty));
         }
 
-        else {
+        else if(limelight.isConnected()){
             telemetry.addData("Has target", false);
+        }
+
+        else{
+            telemetry.addData("youre a loser", true);
         }
 
         intakeCommand.execute();

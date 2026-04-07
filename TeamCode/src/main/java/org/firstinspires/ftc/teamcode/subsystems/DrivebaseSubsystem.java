@@ -52,11 +52,11 @@ public class DrivebaseSubsystem extends SubsystemBase {
         rbmotor.setPower(backRightPower);
     }
 
-    public double getStrafePosition() {
-        double lateral = rbmotor.getCurrentPosition(); // ticks
-
-        double ticksPerInch = 2318.4;
-        return lateral / ticksPerInch;
+    public void defend(){
+        lfmotor.setPower(-1);
+        lbmotor.setPower(1);
+        rfmotor.setPower(-1);
+        rbmotor.setPower(1);
     }
 
 
